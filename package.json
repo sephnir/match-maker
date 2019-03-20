@@ -1,0 +1,52 @@
+{
+  "name": "match-maker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "gulp watchify",
+    "build": "gulp browserify",
+    "production": "gulp browserify-production"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.3.4",
+    "babel-preset-env": "^1.7.0",
+    "babelify": "^10.0.0",
+    "browserify": "^16.2.3",
+    "chalk": "^2.4.2",
+    "fancy-log": "^1.3.3",
+    "gulp": "^4.0.0",
+    "gulp-livereload": "^4.0.1",
+    "gulp-rename": "^1.4.0",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-uglify": "^3.0.2",
+    "node-static": "^0.7.11",
+    "utils-merge": "^1.0.1",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0",
+    "watchify": "^3.11.1"
+  },
+  "browserify": {
+    "transform": [
+      [
+        "babelify",
+        {
+          "presets": [
+            "env"
+          ]
+        }
+      ]
+    ]
+  },
+  "dependencies": {
+    "bootstrap": "^4.3.1",
+    "downloadjs": "^1.4.7",
+    "filedrop": "^2.0.0",
+    "jquery": "^3.3.1",
+    "jqueryui": "^1.11.1",
+    "jszip": "^3.2.0",
+    "pixi.js": "^4.8.6"
+  }
+}
