@@ -39,8 +39,9 @@ build/Release
 node_modules/
 jspm_packages/
 
-# Compiled JS
+# Compiled JS & CSS
 app/js
+app/css
 
 # TypeScript v1 declaration files
 typings/

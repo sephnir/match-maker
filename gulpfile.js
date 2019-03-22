@@ -3,6 +3,7 @@ var gulp = require("gulp");
 var browserify = require("browserify");
 var watchify = require("watchify");
 var babelify = require("babelify");
+var cssmodulesify = require("css-modulesify");
 
 var source = require("vinyl-source-stream");
 var buffer = require("vinyl-buffer");
@@ -11,18 +12,20 @@ var merge = require("utils-merge");
 var rename = require("gulp-rename");
 var uglify = require("gulp-uglify");
 var sourcemaps = require("gulp-sourcemaps");
+var livereload = require("gulp-livereload");
 
 /* nicer browserify errors */
-var flog = require("fancy-log");
+var log = require("fancy-log");
 var chalk = require("chalk");
 
-var livereload = require("gulp-livereload");
+const fs = require("fs");
+
 var static = require("node-static");
 
 function map_error(err) {
   if (err.fileName) {
     // regular error
-    flog.log(
+    log(
       chalk.red(err.name) +
         ": " +
         chalk.yellow(err.fileName.replace(__dirname + "/src/js/", "")) +
@@ -37,7 +40,7 @@ function map_error(err) {
     );
   } else {
     // browserify error..
-    flog.log(chalk.red(err.name) + ": " + chalk.yellow(err.message));
+    log(chalk.red(err.name) + ": " + chalk.yellow(err.message));
   }
 
   this.end();
@@ -48,13 +51,16 @@ gulp.task("watchify", function() {
   livereload.listen({ reloadPage: "./app/editor.html" });
 
   var args = merge(watchify.args, { debug: true });
-  var bundler = watchify(browserify("./src/js/editor.js", args)).transform(
-    babelify,
-    {
-      /* opts */
-    }
-  );
+  var bundler = watchify(browserify("./src/js/editor.js", args))
+    .transform(babelify, { presets: ["env"] })
+    .plugin(cssmodulesify, {
+      rootDir: "app"
+    });
+
   bundle_js(bundler);
+  bundler.on("css stream", function(css) {
+    css.pipe(fs.createWriteStream("app/css/editor.css"));
+  });
   bundler.on("update", function() {
     bundle_js(bundler).pipe(livereload());
   });
@@ -79,21 +85,24 @@ function bundle_js(bundler) {
 
 // Without watchify
 gulp.task("browserify", function() {
-  var bundler = browserify("./src/js/editor.js", { debug: true }).transform(
-    babelify,
-    {
-      /* options */
-    }
-  );
+  var bundler = browserify("./src/js/editor.js", { debug: true })
+    .transform(babelify, { presets: ["env"] })
+    .plugin(cssmodulesify, {
+      rootDir: "app"
+    });
 
   return bundle_js(bundler);
 });
 
 // Without sourcemaps
 gulp.task("browserify-production", function() {
-  var bundler = browserify("./src/js/editor.js").transform(babelify, {
-    /* options */
-  });
+  var bundler = browserify("./src/js/editor.js")
+    .transform(babelify, {
+      presets: ["env"]
+    })
+    .plugin(cssmodulesify, {
+      rootDir: "app"
+    });
 
   return bundler
     .bundle()
