@@ -1,7 +1,7 @@
 import * as PIXI from "pixi.js";
-import { RenderableInterface } from "./interface/renderableInterface";
+import IRenderable from "./interface/IRenderable";
 
-export default class GameScreen implements RenderableInterface {
+export default class GameScreen implements IRenderable {
   private app: PIXI.Application;
   private width: number;
   private height: number;
@@ -12,7 +12,7 @@ export default class GameScreen implements RenderableInterface {
    * @param {number} width The width of the game window.
    * @param {number} height The height of the game window.
    */
-  constructor(width = 800, height = 600) {
+  constructor(width: number = 800, height: number = 600) {
     PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
     this.app = new PIXI.Application(width, height, {
       backgroundColor: 0xeeeeee
