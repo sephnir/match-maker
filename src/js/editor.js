@@ -1,6 +1,6 @@
 import $ from "jquery";
-import s from "./editor.css";
+import GameScreen from "./component/gameScreen";
 
-import "./test.js";
+let gameScreen = new GameScreen(800, 600);
 
-$("body").append($("<input />").attr({ class: s.test }));
+$("body").append(gameScreen.getRender());

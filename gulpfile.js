@@ -1,26 +1,29 @@
-var gulp = require("gulp");
+const gulp = require("gulp");
 
-var browserify = require("browserify");
-var watchify = require("watchify");
-var babelify = require("babelify");
-var cssmodulesify = require("css-modulesify");
+const browserify = require("browserify");
+const watchify = require("watchify");
+const babelify = require("babelify");
+const tsify = require("tsify");
+const cssmodulesify = require("css-modulesify");
 
-var source = require("vinyl-source-stream");
-var buffer = require("vinyl-buffer");
-var merge = require("utils-merge");
+const source = require("vinyl-source-stream");
+const buffer = require("vinyl-buffer");
+const merge = require("utils-merge");
 
-var rename = require("gulp-rename");
-var uglify = require("gulp-uglify");
-var sourcemaps = require("gulp-sourcemaps");
-var livereload = require("gulp-livereload");
+const rename = require("gulp-rename");
+const uglify = require("gulp-uglify");
+const sourcemaps = require("gulp-sourcemaps");
+const livereload = require("gulp-livereload");
 
 /* nicer browserify errors */
-var log = require("fancy-log");
-var chalk = require("chalk");
+const log = require("fancy-log");
+const chalk = require("chalk");
 
+const open = require("opn");
+
+const http = require("http");
 const fs = require("fs");
-
-var static = require("node-static");
+const static = require("node-static");
 
 function map_error(err) {
   if (err.fileName) {
@@ -48,11 +51,21 @@ function map_error(err) {
 /* */
 
 gulp.task("watchify", function() {
+  start_static("app");
   livereload.listen({ reloadPage: "./app/editor.html" });
 
   var args = merge(watchify.args, { debug: true });
   var bundler = watchify(browserify("./src/js/editor.js", args))
-    .transform(babelify, { presets: ["env"] })
+    .plugin(tsify, {
+      target: "es6",
+      compilerOptions: {
+        allowSyntheticDefaultImports: true
+      }
+    })
+    .transform(babelify, {
+      extensions: [".tsx", ".ts"],
+      presets: ["@babel/preset-env"]
+    })
     .plugin(cssmodulesify, {
       rootDir: "app"
     });
@@ -64,6 +77,10 @@ gulp.task("watchify", function() {
   bundler.on("update", function() {
     bundle_js(bundler).pipe(livereload());
   });
+
+  (async () => {
+    open("http://localhost:8080");
+  })();
 });
 
 function bundle_js(bundler) {
@@ -83,28 +100,67 @@ function bundle_js(bundler) {
   );
 }
 
+function start_static(location) {
+  // config
+
+  var file = new static.Server(location, {
+    cache: 3600,
+    gzip: true
+  });
+
+  http
+    .createServer(function(request, response) {
+      request
+        .addListener("end", function() {
+          file.serve(request, response);
+        })
+        .resume();
+    })
+    .listen(8080);
+}
+
 // Without watchify
 gulp.task("browserify", function() {
   var bundler = browserify("./src/js/editor.js", { debug: true })
-    .transform(babelify, { presets: ["env"] })
-    .plugin(cssmodulesify, {
-      rootDir: "app"
-    });
-
-  return bundle_js(bundler);
-});
-
-// Without sourcemaps
-gulp.task("browserify-production", function() {
-  var bundler = browserify("./src/js/editor.js")
+    .plugin(tsify, {
+      target: "es6",
+      compilerOptions: {
+        allowSyntheticDefaultImports: true
+      }
+    })
     .transform(babelify, {
-      presets: ["env"]
+      extensions: [".tsx", ".ts"],
+      presets: ["@babel/preset-env"]
     })
     .plugin(cssmodulesify, {
       rootDir: "app"
     });
 
-  return bundler
+  bundle_js(bundler);
+  bundler.on("css stream", function(css) {
+    css.pipe(fs.createWriteStream("app/css/editor.css"));
+  });
+  return bundler;
+});
+
+// Without sourcemaps
+gulp.task("browserify-production", function() {
+  var bundler = browserify("./src/js/editor.js")
+    .plugin(tsify, {
+      target: "es6",
+      compilerOptions: {
+        allowSyntheticDefaultImports: true
+      }
+    })
+    .transform(babelify, {
+      extensions: [".tsx", ".ts"],
+      presets: ["@babel/preset-env"]
+    })
+    .plugin(cssmodulesify, {
+      rootDir: "app"
+    });
+
+  bundler
     .bundle()
     .on("error", map_error)
     .pipe(source("editor.js"))
@@ -112,4 +168,10 @@ gulp.task("browserify-production", function() {
     .pipe(rename("editor.min.js"))
     .pipe(uglify())
     .pipe(gulp.dest("app/js"));
+
+  bundler.on("css stream", function(css) {
+    css.pipe(fs.createWriteStream("app/css/editor.css"));
+  });
+
+  return bundler;
 });

@@ -1,8 +1,11 @@
 {
   "name": "match-maker",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "A web-based client-side only level editor based on the game 'Punch-Out'",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/sephnir/match-maker.git"
+  },
   "scripts": {
     "start": "gulp watchify",
     "build": "gulp browserify",
@@ -12,7 +15,8 @@
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.3.4",
-    "babel-preset-env": "^1.7.0",
+    "@babel/preset-env": "^7.4.2",
+    "@types/jquery": "^3.3.29",
     "babelify": "^10.0.0",
     "browserify": "^16.2.3",
     "chalk": "^2.4.2",
@@ -24,6 +28,10 @@
     "gulp-sourcemaps": "^2.6.5",
     "gulp-uglify": "^3.0.2",
     "node-static": "^0.7.11",
+    "opn": "^5.5.0",
+    "popper.js": "^1.14.7",
+    "tsify": "^4.0.1",
+    "typescript": "^3.3.4000",
     "utils-merge": "^1.0.1",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0",
@@ -35,7 +43,7 @@
         "babelify",
         {
           "presets": [
-            "env"
+            "@babel/preset-env"
           ]
         }
       ]
@@ -48,6 +56,7 @@
     "jquery": "^3.3.1",
     "jqueryui": "^1.11.1",
     "jszip": "^3.2.0",
-    "pixi.js": "^4.8.6"
+    "pixi.js": "^4.8.6",
+    "pouchdb": "^7.0.0"
   }
 }
