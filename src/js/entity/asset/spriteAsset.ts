@@ -12,7 +12,7 @@ export default class SpriteAsset extends Asset implements IEntity {
   constructor(
     imageName: string = "",
     imageData: string = "",
-    pixiTexture: PIXI.BaseTexture = new PIXI.BaseTexture()
+    pixiTexture: PIXI.BaseTexture = undefined
   ) {
     super(imageName);
 

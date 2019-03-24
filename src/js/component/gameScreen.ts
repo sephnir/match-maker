@@ -1,4 +1,5 @@
 import * as PIXI from "pixi.js";
+import * as $ from "jquery";
 import IRenderable from "./interface/IRenderable";
 
 export default class GameScreen implements IRenderable {
@@ -40,12 +41,7 @@ export default class GameScreen implements IRenderable {
     this.app.stage.addChild(gfx_frame);
   }
 
-  /**
-   * Get the renderable HTMLElement object.
-   *
-   * @returns HTMLElement
-   */
   getRender() {
-    return this.app.view;
+    return $(this.app.view);
   }
 }

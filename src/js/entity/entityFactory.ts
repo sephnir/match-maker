@@ -1,9 +1,9 @@
-import Asset from "./asset";
+import SpriteAsset from "./asset/spriteAsset";
 
 export default class EntityFactory {
-  private asset: Asset[];
+  static spriteAsset: SpriteAsset[] = [];
 
-  public getAsset(): Asset[] {
-    return this.asset;
+  static getSpriteAsset(): SpriteAsset[] {
+    return EntityFactory.spriteAsset;
   }
 }

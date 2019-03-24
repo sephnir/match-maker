@@ -2,7 +2,6 @@ const gulp = require("gulp");
 
 const browserify = require("browserify");
 const watchify = require("watchify");
-const babelify = require("babelify");
 const tsify = require("tsify");
 const cssmodulesify = require("css-modulesify");
 
@@ -39,7 +38,9 @@ function map_error(err) {
         "Column " +
         chalk.magenta(err.columnNumber || err.column) +
         ": " +
-        chalk.blue(err.description)
+        chalk.blue(err.description) +
+        "\n" +
+        chalk.gray(err.message)
     );
   } else {
     // browserify error..
@@ -49,23 +50,22 @@ function map_error(err) {
   this.end();
 }
 /* */
+function createDir() {
+  return gulp
+    .src("*.*", { read: false })
+    .pipe(gulp.dest("app/css"))
+    .pipe(gulp.dest("app/js"));
+}
 
 gulp.task("watchify", function() {
+  createDir();
+
   start_static("app");
   livereload.listen({ reloadPage: "./app/editor.html" });
 
   var args = merge(watchify.args, { debug: true });
-  var bundler = watchify(browserify("./src/js/editor.js", args))
-    .plugin(tsify, {
-      target: "es6",
-      compilerOptions: {
-        allowSyntheticDefaultImports: true
-      }
-    })
-    .transform(babelify, {
-      extensions: [".tsx", ".ts"],
-      presets: ["@babel/preset-env"]
-    })
+  var bundler = watchify(browserify("./src/js/editor.ts", args))
+    .plugin(tsify, {})
     .plugin(cssmodulesify, {
       rootDir: "app"
     });
@@ -121,46 +121,34 @@ function start_static(location) {
 
 // Without watchify
 gulp.task("browserify", function() {
-  var bundler = browserify("./src/js/editor.js", { debug: true })
-    .plugin(tsify, {
-      target: "es6",
-      compilerOptions: {
-        allowSyntheticDefaultImports: true
-      }
-    })
-    .transform(babelify, {
-      extensions: [".tsx", ".ts"],
-      presets: ["@babel/preset-env"]
-    })
+  createDir();
+  var bundler = browserify("./src/js/editor.ts", { debug: true })
+    .plugin(tsify, {})
     .plugin(cssmodulesify, {
       rootDir: "app"
     });
 
-  bundle_js(bundler);
   bundler.on("css stream", function(css) {
-    css.pipe(fs.createWriteStream("app/css/editor.css"));
+    return css.pipe(fs.createWriteStream("app/css/editor.css"));
   });
-  return bundler;
+
+  return bundle_js(bundler);
 });
 
 // Without sourcemaps
 gulp.task("browserify-production", function() {
-  var bundler = browserify("./src/js/editor.js")
-    .plugin(tsify, {
-      target: "es6",
-      compilerOptions: {
-        allowSyntheticDefaultImports: true
-      }
-    })
-    .transform(babelify, {
-      extensions: [".tsx", ".ts"],
-      presets: ["@babel/preset-env"]
-    })
+  createDir();
+  var bundler = browserify("./src/js/editor.ts")
+    .plugin(tsify, {})
     .plugin(cssmodulesify, {
       rootDir: "app"
     });
 
-  bundler
+  bundler.on("css stream", function(css) {
+    return css.pipe(fs.createWriteStream("app/css/editor.css"));
+  });
+
+  return bundler
     .bundle()
     .on("error", map_error)
     .pipe(source("editor.js"))
@@ -168,10 +156,4 @@ gulp.task("browserify-production", function() {
     .pipe(rename("editor.min.js"))
     .pipe(uglify())
     .pipe(gulp.dest("app/js"));
-
-  bundler.on("css stream", function(css) {
-    css.pipe(fs.createWriteStream("app/css/editor.css"));
-  });
-
-  return bundler;
 });

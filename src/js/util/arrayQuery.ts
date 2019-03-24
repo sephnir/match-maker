@@ -1,5 +1,4 @@
 import IEntity from "../entity/interface/IEntity";
-import $ from "jquery";
 
 export class ArrayQuery {
   static find(dataSet: IEntity[], query: (entry: IEntity) => boolean) {
