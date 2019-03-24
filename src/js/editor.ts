@@ -6,5 +6,8 @@ import "./editor.css";
 let gameScreen = new GameScreen(800, 600);
 let spriteList = new SpriteList();
 
+$("#loader").empty();
+
+$("body").addClass("d-flex justify-content-center jumbotron vertical-center");
 $("body").append(gameScreen.getRender());
 $("body").append(spriteList.getRender());
