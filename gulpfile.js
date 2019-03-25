@@ -71,10 +71,12 @@ gulp.task("watchify", function() {
     });
 
   bundle_js(bundler);
+  copy_html();
   bundler.on("css stream", function(css) {
     css.pipe(fs.createWriteStream("app/css/editor.css"));
   });
   bundler.on("update", function() {
+    copy_html();
     bundle_js(bundler).pipe(livereload());
   });
 
@@ -82,6 +84,11 @@ gulp.task("watchify", function() {
     open("http://localhost:8080");
   })();
 });
+
+function copy_html() {
+  gulp.src(["src/html/*.html"]).pipe(gulp.dest("app"));
+  gulp.src(["src/css/*.css"]).pipe(gulp.dest("app/css"));
+}
 
 function bundle_js(bundler) {
   return (

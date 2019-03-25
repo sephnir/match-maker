@@ -35,11 +35,22 @@ export default class NavBar implements IRenderable {
     });
   }
 
+  /**
+   * Adds a new tab into the current navbar.
+   * 
+   * @param name Text of the nav item.
+   * @param id The id to redirect to.
+   */
   addNavItem(name: string, id: string) {
     this.navItem.push({ name: name, id: id });
     this.update();
   }
 
+  /**
+   * Remove a tab based on provided name
+   * 
+   * @param name 
+   */
   removeNavItem(name: string) {
     let ind = -1;
     for (let i = 0; i < this.addNavItem.length; i++) {

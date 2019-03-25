@@ -40,8 +40,7 @@ node_modules/
 jspm_packages/
 
 # Compiled JS & CSS
-app/js
-app/css
+app/
 
 # TypeScript v1 declaration files
 typings/
