@@ -71,12 +71,12 @@ gulp.task("watchify", function() {
     });
 
   bundle_js(bundler);
-  copy_html();
+  copy_files();
   bundler.on("css stream", function(css) {
     css.pipe(fs.createWriteStream("app/css/editor.css"));
   });
   bundler.on("update", function() {
-    copy_html();
+    copy_files();
     bundle_js(bundler).pipe(livereload());
   });
 
@@ -85,9 +85,11 @@ gulp.task("watchify", function() {
   })();
 });
 
-function copy_html() {
+function copy_files() {
   gulp.src(["src/html/*.html"]).pipe(gulp.dest("app"));
-  gulp.src(["src/css/*.css"]).pipe(gulp.dest("app/css"));
+  gulp
+    .src(["node_modules/bootswatch/dist/cyborg/bootstrap.min.css"])
+    .pipe(gulp.dest("app/css"));
 }
 
 function bundle_js(bundler) {

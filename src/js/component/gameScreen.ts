@@ -2,6 +2,8 @@ import * as PIXI from "pixi.js";
 import * as $ from "jquery";
 import IRenderable from "./interface/IRenderable";
 
+import * as s from "./gameScreen.css";
+
 export default class GameScreen implements IRenderable {
   private app: PIXI.Application;
   private width: number;
@@ -42,6 +44,6 @@ export default class GameScreen implements IRenderable {
   }
 
   getRender() {
-    return $(this.app.view);
+    return $(this.app.view).addClass(s.container);
   }
 }
