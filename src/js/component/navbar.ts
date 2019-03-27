@@ -5,7 +5,7 @@ declare module NavItem {
   export interface RootObject {
     name: string;
     id: string;
-    funct: (item: any, ind: number) => {};
+    funct: (item: any, ind: number) => void;
   }
 }
 
@@ -43,7 +43,11 @@ export default class NavBar implements IRenderable {
    * @param name Text of the nav item.
    * @param id The id to redirect to.
    */
-  addNavItem(name: string, id: string, funct: (item: any, ind: number) => {}) {
+  addNavItem(
+    name: string,
+    id: string,
+    funct: (item: any, ind: number) => void
+  ) {
     this.navItem.push({ name: name, id: id, funct: funct });
     this.update();
   }
