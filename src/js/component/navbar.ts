@@ -5,6 +5,7 @@ declare module NavItem {
   export interface RootObject {
     name: string;
     id: string;
+    funct: (item: any, ind: number) => {};
   }
 }
 
@@ -15,19 +16,20 @@ export default class NavBar implements IRenderable {
   private navItem: NavItem.RootObject[] = [];
 
   constructor() {
-    this.jqObj = $("<nav />");
-    this.body = $("<div />").addClass("nav nav-tabs");
+    this.jqObj = $("<div />");
+    this.body = $("<ul />").addClass("nav nav-tabs");
     this.jqObj.append(this.body);
   }
 
   private update() {
     this.body.empty();
-    this.navItem.forEach(item => {
+    this.navItem.forEach((item, ind) => {
       let temp = $("<li />")
-        .addClass("nav nav-tabs")
+        .addClass("nav-item")
         .append(
           $("<a />")
-            .addClass("nav-item nav-link")
+            .addClass("nav-link ")
+            .addClass(ind == 0 ? "active" : "")
             .html(item.name)
             .attr({ "data-toggle": "tab", role: "tab", href: "#" + item.id })
         );
@@ -37,19 +39,19 @@ export default class NavBar implements IRenderable {
 
   /**
    * Adds a new tab into the current navbar.
-   * 
+   *
    * @param name Text of the nav item.
    * @param id The id to redirect to.
    */
-  addNavItem(name: string, id: string) {
-    this.navItem.push({ name: name, id: id });
+  addNavItem(name: string, id: string, funct: (item: any, ind: number) => {}) {
+    this.navItem.push({ name: name, id: id, funct: funct });
     this.update();
   }
 
   /**
    * Remove a tab based on provided name
-   * 
-   * @param name 
+   *
+   * @param name
    */
   removeNavItem(name: string) {
     let ind = -1;

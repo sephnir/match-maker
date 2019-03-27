@@ -1,3 +1,9 @@
-.test {
-  height: 150px;
+.flexdiv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flexdivItem {
+  max-width: 800px;
 }

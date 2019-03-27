@@ -15,8 +15,8 @@ export default class AssetPanel implements IRenderable {
 
   constructor() {
     let navbar = new NavBar();
-    navbar.addNavItem("Sprite", "spriteAsset");
-    navbar.addNavItem("Background", "bgAsset");
+    navbar.addNavItem("Sprite", "spriteAsset",this.tabListener;
+    navbar.addNavItem("Background", "bgAsset",this.tabListener);
 
     this.jqObj = $("<div />").addClass("card");
     this.jqObj.append(navbar.getRender());
@@ -26,6 +26,10 @@ export default class AssetPanel implements IRenderable {
       .addClass(s.cardBody);
     this.body.append(new SpriteList().getRender());
     this.jqObj.append(this.body);
+  }
+
+  tabListener=(item:any,ind:number)=>{
+
   }
 
   getRender() {
