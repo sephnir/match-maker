@@ -5,13 +5,15 @@ import "bootstrap/dist/js/bootstrap.min.js";
 import IRenderable from "./interface/IRenderable";
 
 import NavBar from "./navbar";
-import SpriteList from "./assetList/spriteList";
+import SpriteList from "./assetList/spriteList/spriteList";
 
 import * as s from "./assetPanel.css";
 
 export default class AssetPanel implements IRenderable {
   private jqObj: JQuery;
-  private body: JQuery;
+  private assetBody: JQuery;
+
+  private spriteList = new SpriteList();
 
   constructor() {
     let navbar = new NavBar();
@@ -21,14 +23,21 @@ export default class AssetPanel implements IRenderable {
     this.jqObj = $("<div />").addClass("card");
     this.jqObj.append(navbar.getRender());
 
-    this.body = $("<div />")
+    this.assetBody = $("<div />")
       .addClass("card-body")
       .addClass(s.cardBody);
-    this.body.append(new SpriteList().getRender());
-    this.jqObj.append(this.body);
+    this.assetBody.append(this.spriteList.getRender());
+    this.jqObj.append(this.assetBody);
   }
 
-  tabListener = (item: any, ind: number) => {};
+  private tabListener = (event: any) => {
+    //this.assetBody.empty();
+    switch (event.name) {
+      case 0:
+        this.assetBody.append(this.spriteList.getRender());
+        break;
+    }
+  };
 
   getRender() {
     return this.jqObj;
