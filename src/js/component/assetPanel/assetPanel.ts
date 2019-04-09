@@ -2,10 +2,10 @@ import * as $ from "jquery";
 //import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
 
-import IRenderable from "./interface/IRenderable";
+import IRenderable from "../interface/IRenderable";
 
-import NavBar from "./navbar";
-import SpriteList from "./assetList/spriteList/spriteList";
+import NavBar from "../navbar/navbar";
+import SpriteList from "../assetList/spriteList/spriteList";
 
 import * as s from "./assetPanel.css";
 

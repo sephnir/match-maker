@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import * as $ from "jquery";
-import IRenderable from "./interface/IRenderable";
+import IRenderable from "../interface/IRenderable";
 
 import * as s from "./gameScreen.css";
 

@@ -1,5 +1,5 @@
 import * as $ from "jquery";
-import IRenderable from "./interface/IRenderable";
+import IRenderable from "../interface/IRenderable";
 
 declare module NavItem {
   export interface RootObject {

@@ -1,6 +1,6 @@
 import * as $ from "jquery";
-import GameScreen from "./component/gameScreen";
-import AssetPanel from "./component/assetPanel";
+import GameScreen from "./component/gameScreen/gameScreen";
+import AssetPanel from "./component/assetPanel/assetPanel";
 import * as s from "./editor.css";
 
 let gameScreen = new GameScreen(800, 600);

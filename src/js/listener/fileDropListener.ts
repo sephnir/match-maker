@@ -1,4 +1,4 @@
-export default class FileListener {
+export default class FileDropListener {
   private dropEvent: (file: File, dataurl: string | ArrayBuffer) => void;
 
   constructor(
