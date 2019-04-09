@@ -1,5 +1,5 @@
 {
   "compilerOptions": {
-    "types": ["bootstrap"]
+    "types": ["bootstrap", "node"]
   }
 }

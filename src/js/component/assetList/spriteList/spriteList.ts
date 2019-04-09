@@ -9,13 +9,16 @@ import INotifiable from "../../interface/INotifiable";
 
 import "../../../enum/EEntity";
 import SpriteListItem from "./spriteListItem/spriteListItem";
+import FileListener from "../../../listener/fileListener";
 
 export default class SpriteList implements IRenderable, INotifiable {
   private jqObj: JQuery;
   private spriteItemArr: SpriteListItem[];
+  private fileListener: FileListener;
 
   constructor() {
     this.jqObj = $("<div />").addClass(s.container);
+    this.fileListener = new FileListener(this.jqObj, this.fileHandling);
 
     ManageSprAsset.addSprite("Test", "", undefined);
     ManageSprAsset.addSprite("Test1", "", undefined);
@@ -23,6 +26,11 @@ export default class SpriteList implements IRenderable, INotifiable {
     ManageSprAsset.addSprite("Test3", "", undefined);
 
     this.refetch();
+  }
+
+  fileHandling(file: File, dataurl: string | ArrayBuffer) {
+    console.log(file.name);
+    console.log(dataurl);
   }
 
   refetch() {

@@ -76,6 +76,7 @@ gulp.task("watchify", function() {
     css.pipe(fs.createWriteStream("app/css/editor.css"));
   });
   bundler.on("update", function() {
+    console.log("Changes detected");
     copy_files();
     bundle_js(bundler).pipe(livereload());
   });

@@ -8,6 +8,10 @@ let assetPanel = new AssetPanel();
 
 $("#loader").empty();
 
+$(document).bind("drop dragover contextmenu", function(e) {
+  e.preventDefault();
+});
+
 var body = $("body").addClass(
   "d-flex justify-content-center jumbotron vertical-center"
 );
