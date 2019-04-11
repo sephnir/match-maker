@@ -1,4 +1,8 @@
+.container {
+  width: 200px;
+}
+
 .cardBody {
   padding: 0px;
-  width:100%;
+  width: 100%;
 }

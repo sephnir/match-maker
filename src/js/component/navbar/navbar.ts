@@ -1,11 +1,11 @@
 import * as $ from "jquery";
+import * as s from "./navbar.css";
 import IRenderable from "../interface/IRenderable";
 
 declare module NavItem {
   export interface RootObject {
     name: string;
     id: string;
-    funct: (event: any) => void;
   }
 }
 
@@ -21,21 +21,21 @@ export default class NavBar implements IRenderable {
     this.jqObj.append(this.body);
   }
 
-  private update() {
+  update() {
     this.body.empty();
     this.navItem.forEach((item, ind) => {
       let temp = $("<li />")
         .addClass("nav-item")
         .append(
-          $("<a />")
+          $("<div />")
             .addClass("nav-link ")
+            .addClass(s.navItem)
             .addClass(ind == 0 ? "active" : "")
             .html(item.name)
             .attr({
               "data-toggle": "tab",
               role: "tab",
-              href: "#" + item.id,
-              onclick: item.funct
+              href: "#" + item.id
             })
         );
       this.body.append(temp);
@@ -48,9 +48,18 @@ export default class NavBar implements IRenderable {
    * @param name Text of the nav item.
    * @param id The id to redirect to.
    */
-  addNavItem(name: string, id: string, funct: (event: any) => void) {
-    this.navItem.push({ name: name, id: id, funct: funct });
+  addNavItem(name: string, id: string) {
+    this.navItem.push({ name: name, id: id });
     this.update();
+  }
+
+  /**
+   * Returns the navitem array.
+   *
+   * @returns navItem Array
+   */
+  getNavItem() {
+    return this.navItem;
   }
 
   /**

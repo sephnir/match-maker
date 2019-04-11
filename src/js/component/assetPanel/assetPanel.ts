@@ -10,38 +10,52 @@ import SpriteList from "../assetList/spriteList/spriteList";
 import * as s from "./assetPanel.css";
 
 export default class AssetPanel implements IRenderable {
+  private navbar = new NavBar();
+
   private jqObj: JQuery;
   private assetBody: JQuery;
-
-  private spriteList = new SpriteList();
+  private tabList: { name: string; id: string; renderable: IRenderable }[];
 
   constructor() {
-    let navbar = new NavBar();
-    navbar.addNavItem("Sprite", "spriteAsset", this.tabListener);
-    navbar.addNavItem("Background", "bgAsset", this.tabListener);
+    this.initId();
 
-    this.jqObj = $("<div />").addClass("card");
-    this.jqObj.append(navbar.getRender());
+    this.tabList.forEach(tab => {
+      this.navbar.addNavItem(tab.name, tab.id);
+    });
 
-    this.assetBody = $("<div />")
-      .addClass("card-body")
-      .addClass(s.cardBody);
-    this.assetBody.append(this.spriteList.getRender());
-    this.jqObj.append(this.assetBody);
+    this.update();
   }
 
-  private tabListener = (event: any) => {
-    this.assetBody.empty();
-    switch (event.name) {
-      case 0:
-        this.assetBody.append(this.spriteList.getRender());
-        break;
-      case 1:
-        break;
-    }
+  private initId = () => {
+    this.tabList = [];
+    this.tabList.push({
+      name: "Sprite",
+      id: "spriteAsset",
+      renderable: new SpriteList()
+    });
+    //this.tabList.push({ name: "Background", id: "bgAsset", render: null });
   };
 
-  update() {}
+  update() {
+    this.jqObj = $("<div />")
+      .addClass("card")
+      .addClass(s.container);
+    this.jqObj.append(this.navbar.getRender());
+
+    this.assetBody = $("<div />")
+      .addClass("card-body tab-content")
+      .addClass(s.cardBody);
+
+    this.tabList.forEach(tab => {
+      let temp = $("<div />");
+      temp.attr({ id: tab.id });
+      temp.append(tab.renderable.getRender());
+
+      this.assetBody.append(temp);
+    });
+
+    this.jqObj.append(this.assetBody);
+  }
 
   getRender() {
     return this.jqObj;

@@ -43,6 +43,8 @@ export default class GameScreen implements IRenderable {
     this.app.stage.addChild(gfx_frame);
   }
 
+  update() {}
+
   getRender() {
     return $(this.app.view).addClass(s.container);
   }
