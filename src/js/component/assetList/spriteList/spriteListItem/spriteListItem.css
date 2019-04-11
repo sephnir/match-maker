@@ -1,0 +1,24 @@
+.thumbnailContainer {
+  width: 25px;
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.thumbnail {
+  max-width: 25px;
+  max-height: 25px;
+}
+
+.label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+}
+
+.spriteItem {
+  padding: 2px;
+  display: flex;
+}

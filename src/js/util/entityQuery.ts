@@ -1,9 +1,9 @@
 import IEntity from "../entity/interface/IEntity";
 
-export class ArrayQuery {
+export class EntityQuery {
   static find(dataSet: IEntity[], query: (entry: IEntity) => boolean) {
     return undefined; //dataSet.find(query);
-	//TODO - Fix find() function
+    //TODO - Fix find() function
   }
 
   static select(dataSet: IEntity[], query: (entry: IEntity) => boolean) {

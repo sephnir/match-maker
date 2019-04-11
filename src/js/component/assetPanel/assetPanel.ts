@@ -31,13 +31,17 @@ export default class AssetPanel implements IRenderable {
   }
 
   private tabListener = (event: any) => {
-    //this.assetBody.empty();
+    this.assetBody.empty();
     switch (event.name) {
       case 0:
         this.assetBody.append(this.spriteList.getRender());
         break;
+      case 1:
+        break;
     }
   };
+
+  update() {}
 
   getRender() {
     return this.jqObj;

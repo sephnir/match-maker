@@ -9,56 +9,50 @@ import INotifiable from "../../interface/INotifiable";
 
 import "../../../enum/EEntity";
 import SpriteListItem from "./spriteListItem/spriteListItem";
-import FileListener from "../../../listener/fileListener";
+import FileDropListener from "../../../listener/fileDropListener";
+import formatter from "../../../util/formatter";
 
 export default class SpriteList implements IRenderable, INotifiable {
   private jqObj: JQuery;
   private spriteItemArr: SpriteListItem[];
-  private fileListener: FileListener;
+  private fileListener: FileDropListener;
 
   constructor() {
     this.jqObj = $("<div />").addClass(s.container);
-    this.fileListener = new FileListener(this.jqObj, this.fileHandling);
-
-    ManageSprAsset.addSprite("Test", "", undefined);
-    ManageSprAsset.addSprite("Test1", "", undefined);
-    ManageSprAsset.addSprite("Test2", "", undefined);
-    ManageSprAsset.addSprite("Test3", "", undefined);
-
-    this.refetch();
+    this.fileListener = new FileDropListener(this.jqObj, this.fileHandling);
   }
 
-  fileHandling(file: File, dataurl: string | ArrayBuffer) {
-    console.log(file.name);
-    console.log(dataurl);
-  }
+  fileHandling = (file: File, dataurl: string | ArrayBuffer) => {
+    ManageSprAsset.addSprite(
+      formatter.removeExt(file.name),
+      dataurl.toString(),
+      undefined
+    );
+    this.update();
+  };
 
-  refetch() {
+  update = () => {
     this.jqObj.empty();
 
-    let list = this.jqObj
-      .append($("<li></li>").addClass("list-group"))
-      .find("li");
+    let list = this.jqObj.append($("<li />").addClass("list-group")).find("li");
 
     EF.getSpriteAsset().map(item => {
       // this.spriteItemArr.push(
       //   new SpriteListItem(item)
       // );
+      let temp = new SpriteListItem(item);
 
-      let temp = $("<ul></ul>")
-        .append(item.getName())
-        .addClass("list-group-item");
-      list.append(temp);
+      list.append(temp.getRender());
     });
-  }
+  };
 
-  notify(types: EntityType) {
+  notify = (types: EntityType) => {
     switch (types) {
       case EntityType.SPRITE_ASSET:
-        this.refetch();
+        this.update();
     }
-  }
-  getRender() {
+  };
+  getRender = () => {
     return this.jqObj;
-  }
+  };
 }
