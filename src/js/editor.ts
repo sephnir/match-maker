@@ -1,3 +1,6 @@
+const globalVar: any = global;
+
+globalVar.jQuery = require("jquery");
 import * as $ from "jquery";
 import GameScreen from "./component/gameScreen/gameScreen";
 import AssetPanel from "./component/assetPanel/assetPanel";
