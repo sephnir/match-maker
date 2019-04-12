@@ -6,10 +6,12 @@
 }
 
 .listHighlight {
+  margin: 0px;
   height: 25px;
   background-color: gray;
 }
 
 .dragHandle {
   margin: 0;
+  opacity: 0.4;
 }

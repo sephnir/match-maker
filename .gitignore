@@ -41,6 +41,7 @@ jspm_packages/
 
 # Compiled JS & CSS
 app/
+dist/
 
 # TypeScript v1 declaration files
 typings/

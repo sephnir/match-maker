@@ -53,27 +53,28 @@ function map_error(err) {
 function createDir() {
   return gulp
     .src("*.*", { read: false })
-    .pipe(gulp.dest("app/css"))
-    .pipe(gulp.dest("app/js"));
+    .pipe(gulp.dest("dist/css"))
+    .pipe(gulp.dest("dist/js"))
+    .pipe(gulp.dest("dist/img"));
 }
 
 gulp.task("watchify", function() {
   createDir();
 
-  start_static("app");
-  livereload.listen({ reloadPage: "./app/editor.html" });
+  start_static("dist");
+  livereload.listen({ reloadPage: "./dist/editor.html" });
 
   var args = merge(watchify.args, { debug: true });
   var bundler = watchify(browserify("./src/js/editor.ts", args))
     .plugin(tsify, {})
     .plugin(cssmodulesify, {
-      rootDir: "app"
+      rootDir: "dist"
     });
 
   bundle_js(bundler);
   copy_files();
   bundler.on("css stream", function(css) {
-    css.pipe(fs.createWriteStream("app/css/editor.css"));
+    css.pipe(fs.createWriteStream("dist/css/editor.css"));
   });
   bundler.on("update", function() {
     console.log("Changes detected");
@@ -87,10 +88,12 @@ gulp.task("watchify", function() {
 });
 
 function copy_files() {
-  gulp.src(["src/html/*.html"]).pipe(gulp.dest("app"));
+  gulp.src(["src/html/*.html"]).pipe(gulp.dest("dist"));
   gulp
     .src(["node_modules/bootswatch/dist/cyborg/bootstrap.min.css"])
-    .pipe(gulp.dest("app/css"));
+    .pipe(gulp.dest("dist/css"));
+
+  gulp.src(["src/img/**/*"]).pipe(gulp.dest("dist/img"));
 }
 
 function bundle_js(bundler) {
@@ -100,13 +103,13 @@ function bundle_js(bundler) {
       .on("error", map_error)
       .pipe(source("editor.js"))
       .pipe(buffer())
-      .pipe(gulp.dest("app/js"))
+      .pipe(gulp.dest("dist/js"))
       .pipe(rename("editor.min.js"))
       .pipe(sourcemaps.init({ loadMaps: true }))
       // capture sourcemaps from transforms
       .pipe(uglify())
       .pipe(sourcemaps.write("."))
-      .pipe(gulp.dest("app/js"))
+      .pipe(gulp.dest("dist/js"))
   );
 }
 
@@ -135,11 +138,11 @@ gulp.task("browserify", function() {
   var bundler = browserify("./src/js/editor.ts", { debug: true })
     .plugin(tsify, {})
     .plugin(cssmodulesify, {
-      rootDir: "app"
+      rootDir: "dist"
     });
 
   bundler.on("css stream", function(css) {
-    return css.pipe(fs.createWriteStream("app/css/editor.css"));
+    return css.pipe(fs.createWriteStream("dist/css/editor.css"));
   });
 
   return bundle_js(bundler);
@@ -151,11 +154,11 @@ gulp.task("browserify-production", function() {
   var bundler = browserify("./src/js/editor.ts")
     .plugin(tsify, {})
     .plugin(cssmodulesify, {
-      rootDir: "app"
+      rootDir: "dist"
     });
 
   bundler.on("css stream", function(css) {
-    return css.pipe(fs.createWriteStream("app/css/editor.css"));
+    return css.pipe(fs.createWriteStream("dist/css/editor.css"));
   });
 
   return bundler
@@ -165,5 +168,5 @@ gulp.task("browserify-production", function() {
     .pipe(buffer())
     .pipe(rename("editor.min.js"))
     .pipe(uglify())
-    .pipe(gulp.dest("app/js"));
+    .pipe(gulp.dest("dist/js"));
 });

@@ -11,15 +11,18 @@ export default class SpriteListItem implements IRenderable {
   private jqObj: JQuery;
   private sprite: SpriteAsset;
 
-  private handleClass: string = "";
+  private handleClass: string;
 
-  constructor(item: SpriteAsset) {
+  constructor(item: SpriteAsset, handleClass: string = "") {
     this.sprite = item;
-
+    this.handleClass = handleClass;
+    this.jqObj = $("<ul />").addClass(s.container);
     this.update();
   }
 
   update() {
+    this.jqObj.empty();
+
     let imageCtn = $("<div />").addClass(s.thumbnailContainer);
 
     let image = $("<img />")
@@ -32,19 +35,25 @@ export default class SpriteListItem implements IRenderable {
       .append(this.sprite.getName())
       .addClass(s.label);
 
-    let handle = $("<img />")
-      //.attr({ src: dragLogo })
-      .addClass(this.handleClass);
+    let icon = $("<img />").attr({ src: "/img/draggable.svg" });
+    //.addClass("dragHandle");
 
-    this.jqObj = $("<ul />")
+    let handle = $("<div />")
+      .addClass(this.handleClass)
+      .append(icon);
+
+    this.jqObj
       .append(imageCtn)
-      .append("&nbsp;")
       .append(label)
+      .append(handle)
       .addClass("list-group-item")
       .addClass(s.spriteItem);
   }
 
-  setDraggableHandleClass(className: string) {}
+  setDraggableHandleClass(className: string) {
+    this.handleClass = className;
+    this.update();
+  }
 
   getSprite() {
     return this.sprite;

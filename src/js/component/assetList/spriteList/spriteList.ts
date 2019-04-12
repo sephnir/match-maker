@@ -35,23 +35,21 @@ export default class SpriteList implements IRenderable, INotifiable {
   update = () => {
     this.jqObj.empty();
 
-    let list = this.jqObj
-      .append($("<li />").addClass("list-group"))
-      .find("li")
-      .sortable({
-        placeholder: s.listHighlight,
-        axis: "y",
-        handle: s.dragHandle
-      });
+    let list = $("<li />").addClass("list-group");
 
     EF.getSpriteAsset().map(item => {
-      // this.spriteItemArr.push(
-      //   new SpriteListItem(item)
-      // );
-      let temp = new SpriteListItem(item);
-      temp.setDraggableHandleClass(s.dragHandle);
+      let temp = new SpriteListItem(item, s.dragHandle);
       list.append(temp.getRender());
     });
+
+    list.sortable({
+      placeholder: s.listHighlight,
+      axis: "y",
+      handle: "." + s.dragHandle,
+      scroll: true
+    });
+
+    this.jqObj.append(list);
   };
 
   notify = (types: EntityType) => {
