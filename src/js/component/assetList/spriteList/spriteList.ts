@@ -2,6 +2,7 @@
 import * as s from "./spriteList.css";
 
 import * as $ from "jquery";
+import "jqueryui";
 import EF from "../../../entity/entityFactory";
 import ManageSprAsset from "../../../controller/ManageSpriteAsset";
 import IRenderable from "../../interface/IRenderable";
@@ -34,14 +35,21 @@ export default class SpriteList implements IRenderable, INotifiable {
   update = () => {
     this.jqObj.empty();
 
-    let list = this.jqObj.append($("<li />").addClass("list-group")).find("li");
+    let list = this.jqObj
+      .append($("<li />").addClass("list-group"))
+      .find("li")
+      .sortable({
+        placeholder: s.listHighlight,
+        axis: "y",
+        handle: s.dragHandle
+      });
 
     EF.getSpriteAsset().map(item => {
       // this.spriteItemArr.push(
       //   new SpriteListItem(item)
       // );
       let temp = new SpriteListItem(item);
-
+      temp.setDraggableHandleClass(s.dragHandle);
       list.append(temp.getRender());
     });
   };
