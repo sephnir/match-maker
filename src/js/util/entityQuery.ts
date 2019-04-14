@@ -6,6 +6,12 @@ export class EntityQuery {
     //TODO - Fix find() function
   }
 
+  /**
+   * Move an entity item in an array to a different position.
+   * @param dataSet Array of entities to modify.
+   * @param src The original position of the item.
+   * @param dest The destination position of the item to relocate to.
+   */
   static relocate(dataSet: IEntity[], src: number, dest: number) {
     try {
       let temp = dataSet.splice(src, 1);
@@ -21,10 +27,20 @@ export class EntityQuery {
     }
   }
 
+  /**
+   * Search through an entity array and returns a list that satisfy the condition.
+   * @param dataSet Array of entities to search in.
+   * @param query The query condition function that returns boolean.
+   */
   static select(dataSet: IEntity[], query: (entry: IEntity) => boolean) {
     return dataSet.filter(query);
   }
 
+  /**
+   * Search through an entity array and delete items that satisfy the condition.
+   * @param dataSet Array of entities to delete from.
+   * @param query The query condition function that returns boolean.
+   */
   static delete(dataSet: IEntity[], query: (entry: IEntity) => boolean) {
     let entries = 0;
     try {
@@ -42,10 +58,5 @@ export class EntityQuery {
       return false;
     }
     return entries;
-  }
-
-  static sort(dataSet: IEntity[], condition: (entry: IEntity) => number) {
-    let temp = dataSet.slice();
-    return temp.sort(condition);
   }
 }

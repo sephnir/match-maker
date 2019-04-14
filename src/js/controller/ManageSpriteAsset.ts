@@ -8,21 +8,44 @@ import "../enum/EEntity";
 
 export default class ManageSpriteAsset {
   private static observer: INotifiable[] = [];
+
+  /**
+   * Notifies all notifiable components that are observing "sprite assets".
+   */
   private static update(): void {
     this.observer.forEach(o => {
       o.notify(EntityType.SPRITE_ASSET);
     });
   }
+
+  /**
+   * Add a new observer.
+   * @param obj Notifiable components.
+   */
   static addObserver(obj: INotifiable) {
     this.observer.push(obj);
   }
 
-  static addSprite(name: string, uri: string, texture: PIXI.BaseTexture) {
+  /**
+   * Create a new sprite asset instance.
+   * @param name Name of the sprite asset. (used as file name).
+   * @param uri Base64 representation of buffer.
+   * @param texture PIXI texture object.
+   */
+  static addSprite(
+    name: string,
+    uri: string,
+    texture: PIXI.BaseTexture = undefined
+  ) {
     let temp = new Sprite(name, uri, texture);
     EF.getSpriteAsset().push(temp);
     this.update();
   }
 
+  /**
+   * Depreciated.
+   * @param file
+   */
   static uploadHandling(file) {
     let temp = file.name
       .split(".")

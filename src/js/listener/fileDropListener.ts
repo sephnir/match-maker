@@ -1,6 +1,11 @@
 export default class FileDropListener {
   private dropEvent: (file: File, dataurl: string | ArrayBuffer) => void;
 
+  /**
+   * Listens for file drops.
+   * @param ref JQuery object to apply listener on.
+   * @param dropEvent Function callback that handles file drop events.
+   */
   constructor(
     ref: JQuery,
     dropEvent: (file: File, dataurl: string | ArrayBuffer) => void
