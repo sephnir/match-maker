@@ -12,15 +12,25 @@ import "../../../enum/EEntity";
 import SpriteListItem from "./spriteListItem/spriteListItem";
 import FileDropListener from "../../../listener/fileDropListener";
 import formatter from "../../../util/formatter";
+import { EntityQuery } from "../../../util/entityQuery";
 
 export default class SpriteList implements IRenderable, INotifiable {
   private jqObj: JQuery;
+  private searchBar: JQuery;
+
   private spriteItemArr: SpriteListItem[];
   private fileListener: FileDropListener;
 
   constructor() {
     this.jqObj = $("<div />").addClass(s.container);
+    this.searchBar = $("<input />").attr({
+      type: "text",
+      placeholder: "Search"
+    });
+    this.searchBar.on("keyup paste", this.update);
+
     this.fileListener = new FileDropListener(this.jqObj, this.fileHandling);
+    this.init();
   }
 
   fileHandling = (file: File, dataurl: string | ArrayBuffer) => {
@@ -32,24 +42,63 @@ export default class SpriteList implements IRenderable, INotifiable {
     this.update();
   };
 
-  update = () => {
-    this.jqObj.empty();
-
-    let list = $("<li />").addClass("list-group");
-
-    EF.getSpriteAsset().map(item => {
-      let temp = new SpriteListItem(item, s.dragHandle);
-      list.append(temp.getRender());
-    });
+  init = () => {
+    let listContainer = $("<div />").addClass(s.listContainer);
+    let list = $("<li />")
+      .addClass("list-group")
+      .addClass(s.list);
 
     list.sortable({
       placeholder: s.listHighlight,
-      axis: "y",
       handle: "." + s.dragHandle,
-      scroll: true
+      scroll: true,
+      cursor: "grabbing",
+      axis: "y",
+      start: function(ev, ui) {
+        $(this).data("previndex", ui.item.index());
+      },
+      update: this.relocate
+    });
+    listContainer.append(list);
+
+    this.jqObj.append(this.searchBar);
+    this.jqObj.append(listContainer);
+
+    this.update();
+  };
+
+  relocate(ev, ui) {
+    // gets the new and old index then removes the temporary attribute
+    var newIndex = ui.item.index();
+    var oldIndex = $(this).data("previndex");
+
+    EntityQuery.relocate(EF.getSpriteAsset(), oldIndex, newIndex);
+
+    $(this).removeAttr("data-previndex");
+  }
+
+  update = () => {
+    let list = this.jqObj.find("." + s.list);
+    list.empty();
+
+    let searchRE = new RegExp(
+      ".*" +
+        this.searchBar
+          .val()
+          .toString()
+          .toLowerCase() +
+        ".*"
+    );
+    // Construct the list
+    EF.getSpriteAsset().map(item => {
+      if (searchRE.test(item.getName().toLowerCase())) {
+        let temp = new SpriteListItem(item, s.dragHandle);
+        let tempItem = temp.getRender();
+        list.append(tempItem);
+      }
     });
 
-    this.jqObj.append(list);
+    list.sortable("refresh");
   };
 
   notify = (types: EntityType) => {

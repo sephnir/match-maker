@@ -6,6 +6,21 @@ export class EntityQuery {
     //TODO - Fix find() function
   }
 
+  static relocate(dataSet: IEntity[], src: number, dest: number) {
+    try {
+      let temp = dataSet.splice(src, 1);
+      if (temp[0]) {
+        dataSet.splice(dest, 0, temp[0]);
+      } else {
+        return false;
+      }
+      return true;
+    } catch (e) {
+      console.log("Error @ relocate: " + e);
+      return false;
+    }
+  }
+
   static select(dataSet: IEntity[], query: (entry: IEntity) => boolean) {
     return dataSet.filter(query);
   }
@@ -22,7 +37,8 @@ export class EntityQuery {
           entries++;
         }
       });
-    } catch {
+    } catch (e) {
+      console.log("Error @ relocate: " + e);
       return false;
     }
     return entries;
