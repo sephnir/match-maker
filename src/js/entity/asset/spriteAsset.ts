@@ -1,8 +1,9 @@
 import Asset from "../asset";
 import IEntity from "../interface/IEntity";
+import IAsset from "../interface/IAsset";
 import * as PIXI from "pixi.js";
 
-export default class SpriteAsset extends Asset implements IEntity {
+export default class SpriteAsset extends Asset implements IEntity, IAsset {
   private static spriteAssetSID = 0;
 
   private spriteAssetId: number;

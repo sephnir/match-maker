@@ -1,4 +1,5 @@
 import IEntity from "../entity/interface/IEntity";
+import IAsset from "../entity/interface/IAsset";
 
 export class EntityQuery {
   static find(dataSet: IEntity[], query: (entry: IEntity) => boolean) {
@@ -25,6 +26,31 @@ export class EntityQuery {
       console.log("Error @ relocate: " + e);
       return false;
     }
+  }
+
+  /**
+   * Get name of entity with duplicate numbering appended.
+   * @param dataSet
+   * @param name
+   */
+  static getDupeName(dataSet: IAsset[], name: string) {
+    let dupe = false;
+    let count = 0;
+    let nameMod = name;
+
+    do {
+      dupe = false;
+      for (let i = 0; i < dataSet.length; i++) {
+        if (dataSet[i].getName() == nameMod) dupe = true;
+      }
+
+      if (dupe) {
+        count++;
+        nameMod = name + "(" + count + ")";
+      }
+    } while (dupe);
+
+    return nameMod;
   }
 
   /**

@@ -34,11 +34,12 @@ export default class SpriteList implements IRenderable, INotifiable {
   }
 
   fileHandling = (file: File, dataurl: string | ArrayBuffer) => {
-    ManageSprAsset.addSprite(
-      formatter.removeExt(file.name),
-      dataurl.toString(),
-      undefined
+    let nameFormatted = EntityQuery.getDupeName(
+      EF.getSpriteAsset(),
+      formatter.removeExt(file.name)
     );
+
+    ManageSprAsset.addSprite(nameFormatted, dataurl.toString(), undefined);
     this.update();
   };
 
@@ -83,15 +84,17 @@ export default class SpriteList implements IRenderable, INotifiable {
 
     let searchRE = new RegExp(
       ".*" +
-        this.searchBar
-          .val()
-          .toString()
-          .toLowerCase() +
+        escape(
+          this.searchBar
+            .val()
+            .toString()
+            .toLowerCase()
+        ) +
         ".*"
     );
     // Construct the list
     EF.getSpriteAsset().map(item => {
-      if (searchRE.test(item.getName().toLowerCase())) {
+      if (searchRE.test(escape(item.getName().toLowerCase()))) {
         let temp = new SpriteListItem(item, s.dragHandle);
         let tempItem = temp.getRender();
         list.append(tempItem);
