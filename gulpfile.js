@@ -94,6 +94,7 @@ function copy_files() {
     .pipe(gulp.dest("dist/css"));
 
   gulp.src(["src/img/**/*"]).pipe(gulp.dest("dist/img"));
+  gulp.src(["src/lib/**/*"]).pipe(gulp.dest("dist/js"));
 }
 
 function bundle_js(bundler) {

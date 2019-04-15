@@ -1,8 +1,7 @@
-/// <reference path = "../../../declare.d.ts" />
 import * as s from "./spriteList.css";
 
-import * as $ from "jquery";
-import "jqueryui";
+//import $ = require("jquery");
+//import "jquery-ui";
 import EF from "../../../entity/entityFactory";
 import ManageSprAsset from "../../../controller/ManageSpriteAsset";
 import IRenderable from "../../interface/IRenderable";
@@ -84,7 +83,7 @@ export default class SpriteList implements IRenderable, INotifiable {
 
     let searchRE = new RegExp(
       ".*" +
-        escape(
+        formatter.escapeRegExp(
           this.searchBar
             .val()
             .toString()
@@ -94,7 +93,7 @@ export default class SpriteList implements IRenderable, INotifiable {
     );
     // Construct the list
     EF.getSpriteAsset().map(item => {
-      if (searchRE.test(escape(item.getName().toLowerCase()))) {
+      if (searchRE.test(item.getName().toLowerCase())) {
         let temp = new SpriteListItem(item, s.dragHandle);
         let tempItem = temp.getRender();
         list.append(tempItem);

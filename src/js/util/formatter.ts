@@ -7,4 +7,12 @@ export default class className {
     let temp = filename;
     return temp.replace(/\.[^/.]+$/, "");
   }
+
+  /**
+   * Takes in a string and return the string with escaped characters. For use with regex.
+   * @param text Text for processing.
+   */
+  static escapeRegExp(text: string) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+  }
 }

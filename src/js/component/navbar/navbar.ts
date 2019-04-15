@@ -1,4 +1,4 @@
-import * as $ from "jquery";
+//import $ = require("jquery");
 import * as s from "./navbar.css";
 import IRenderable from "../interface/IRenderable";
 

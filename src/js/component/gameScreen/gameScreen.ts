@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import * as $ from "jquery";
+//import $ = require("jquery");
 import IRenderable from "../interface/IRenderable";
 
 import * as s from "./gameScreen.css";

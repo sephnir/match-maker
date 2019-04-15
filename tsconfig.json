@@ -1,5 +1,10 @@
 {
   "compilerOptions": {
-    "types": ["bootstrap", "node"]
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "types": ["bootstrap", "node"],
+    "paths": {
+      "jquery-ui": ["node_modules/@types/jqueryui/index"]
+    }
   }
 }

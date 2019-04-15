@@ -1,7 +1,6 @@
 import * as s from "./spriteListItem.css";
 
-import * as $ from "jquery";
-import "jqueryui";
+//import j = require("jquery");
 import IRenderable from "../../../interface/IRenderable";
 import SpriteAsset from "../../../../entity/asset/spriteAsset";
 
