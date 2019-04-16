@@ -1,12 +1,9 @@
 /// <reference path = "../../node_modules/@types/jqueryui/index.d.ts" />
 /// <reference path = "./declare.d.ts" />
-const globalVar: any = global;
 
-//globalVar.jQuery = require("jquery");
-//import $ = require("jquery");
 import GameScreen from "./component/gameScreen/gameScreen";
 import AssetPanel from "./component/assetPanel/assetPanel";
-import ModalBox from "./component/modalBox/modalBox";
+import TabCloseListener from "./listener/tabCloseListener";
 import * as s from "./editor.css";
 
 let gameScreen = new GameScreen(800, 600);
@@ -14,6 +11,7 @@ let assetPanel = new AssetPanel();
 
 $("#loader").empty();
 
+TabCloseListener();
 $(document).bind("drop dragover contextmenu", function(e) {
   e.preventDefault();
 });

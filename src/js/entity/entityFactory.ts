@@ -1,13 +1,8 @@
-import SpriteAsset from "./asset/spriteAsset";
+import { DataSet } from "vis";
+import SpriteAsset from "./ISpriteAsset";
 
 export default class EntityFactory {
-  static spriteAsset: SpriteAsset[] = [];
-
-  static getSpriteAsset(): SpriteAsset[] {
-    return EntityFactory.spriteAsset;
-  }
-
-  static setSpriteAsset(assetList: SpriteAsset[]) {
-    EntityFactory.spriteAsset = assetList;
-  }
+  static spriteAsset: DataSet<SpriteAsset> = new DataSet({
+    fieldId: "id"
+  });
 }

@@ -1,19 +1,17 @@
 import * as s from "./spriteListItem.css";
 
-//import j = require("jquery");
 import IRenderable from "../../../interface/IRenderable";
-import SpriteAsset from "../../../../entity/asset/spriteAsset";
-
-//const dragLogo = require("../../../../../img/draggable.svg") as string;
 
 export default class SpriteListItem implements IRenderable {
   private jqObj: JQuery;
-  private sprite: SpriteAsset;
+  private name: string;
+  private image: string;
 
   private handleClass: string;
 
-  constructor(item: SpriteAsset, handleClass: string = "") {
-    this.sprite = item;
+  constructor(name: string, image: string, handleClass: string = "") {
+    this.name = name;
+    this.image = image;
     this.handleClass = handleClass;
     this.jqObj = $("<ul />").addClass(s.container);
     this.update();
@@ -26,12 +24,12 @@ export default class SpriteListItem implements IRenderable {
 
     let image = $("<img />")
       .addClass(s.thumbnail)
-      .attr("src", this.sprite.getImage());
+      .attr("src", this.image);
 
     imageCtn.append(image);
 
     let label = $("<div />")
-      .append(this.sprite.getName())
+      .append(this.name)
       .addClass(s.label);
 
     let icon = $("<img />").attr({ src: "/img/draggable.svg" });
@@ -51,15 +49,6 @@ export default class SpriteListItem implements IRenderable {
 
   setDraggableHandleClass(className: string) {
     this.handleClass = className;
-    this.update();
-  }
-
-  getSprite() {
-    return this.sprite;
-  }
-
-  setSprite(sprite: SpriteAsset) {
-    this.sprite = sprite;
     this.update();
   }
 

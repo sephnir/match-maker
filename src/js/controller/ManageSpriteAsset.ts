@@ -1,6 +1,7 @@
-import Sprite from "../entity/asset/spriteAsset";
 import INotifiable from "../component/interface/INotifiable";
+import SpriteAsset from "../entity/ISpriteAsset";
 import EF from "../entity/entityFactory";
+import formatter from "../util/formatter";
 
 import * as PIXI from "pixi.js";
 
@@ -27,70 +28,61 @@ export default class ManageSpriteAsset {
   }
 
   /**
-   * Create a new sprite asset instance.
-   * @param name Name of the sprite asset. (used as file name).
-   * @param uri Base64 representation of buffer.
-   * @param texture PIXI texture object.
+   * Remove extension from name and create a new sprite asset instance.
+   * @param name File name of the sprite asset.
+   * @param image Base64 representation of buffer.
    */
-  static addSprite(
-    name: string,
-    uri: string,
-    texture: PIXI.BaseTexture = undefined
-  ) {
-    let temp = new Sprite(name, uri, texture);
-    EF.getSpriteAsset().push(temp);
+  static uploadSprite(spriteAsset: SpriteAsset) {
+    let clone = spriteAsset;
+    let tempName = formatter.removeExt(clone.name);
+    clone.name = tempName;
+
+    this.addSprite(spriteAsset);
+  }
+
+  /**
+   * Create a new sprite asset instance.
+   * @param name Name of the sprite asset.
+   * @param image Base64 representation of buffer.
+   */
+  static addSprite(spriteAsset: SpriteAsset) {
+    let clone = spriteAsset;
+    let tempName = this.dupeName(clone.name);
+    clone.name = tempName;
+    EF.spriteAsset.add(clone);
+
     this.update();
   }
 
   /**
-   * Depreciated.
-   * @param file
+   * Format name string with duplicate numbering appended.
+   * @param name Name of the entity instance
    */
-  static uploadHandling(file) {
-    let temp = file.name
-      .split(".")
-      .slice(0, -1)
-      .join(".");
-    let dupeCheck = false;
+  static dupeName(name: string) {
+    let dupe = false;
+    let count = 0;
+    let nameMod = name;
 
-    if (
-      file.type !== "image/png" &&
-      file.type !== "image/gif" &&
-      file.type !== "image/jpeg"
-    ) {
-      alert(
-        "Invalid file type. Only PNG/GIF/JPEG files are accepted. Please try again."
-      );
-      return;
-    }
     do {
-      dupeCheck = false;
-      //assets.getSpriteList().forEach(function (item, index, arr)
-      for (let i = 0; i < EF.getSpriteAsset().length; i++) {
-        if (
-          temp === undefined ||
-          temp === null ||
-          temp.replace(/ /g, "") === ""
-        )
-          return;
-        if (
-          EF.getSpriteAsset()
-            [i].getName()
-            .toUpperCase() === temp.toUpperCase()
-        ) {
-          temp = prompt(
-            "Duplicate asset name found for '" +
-              file.name +
-              "'.\nPlease type in a new name:"
-          );
-          dupeCheck = true;
-        }
+      dupe = false;
+      dupe =
+        EF.spriteAsset.get({
+          filter: item => {
+            return item.name == nameMod;
+          }
+        }).length > 0;
+
+      if (dupe) {
+        count++;
+        nameMod = name + "(" + count + ")";
       }
-    } while (dupeCheck);
+    } while (dupe);
 
-    if (temp === undefined || temp === null || temp.replace(/ /g, "") === "")
-      return;
+    return nameMod;
+  }
 
-    this.addSprite(temp, file.uri, undefined);
+  static getSprite(option: {} = undefined) {
+    if (option) return EF.spriteAsset.get(option);
+    else return EF.spriteAsset.get();
   }
 }
