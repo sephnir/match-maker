@@ -20,22 +20,18 @@ var body = $("body").addClass(
   "d-flex justify-content-center jumbotron vertical-center"
 );
 
-var container = $("<div />")
-  //.addClass("container")
-  .addClass(s.flexbox);
+var container = $("<div />").addClass(s.flexbox);
 
 var row = $("<div />").addClass("row");
 
 var col: JQuery[] = [];
 col.push(
   $("<div />")
-    //.addClass("col")
     .addClass(s.flexdivItem)
     .append(gameScreen.getRender())
 );
 col.push(
   $("<div />")
-    //.addClass("col")
     .addClass(s.flexdivItem)
     .append(assetPanel.getRender())
 );

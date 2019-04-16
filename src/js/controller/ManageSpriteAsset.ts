@@ -49,6 +49,8 @@ export default class ManageSpriteAsset {
     let clone = spriteAsset;
     let tempName = this.dupeName(clone.name);
     clone.name = tempName;
+    if (!clone.order) clone.order = EF.spriteAsset.length + 1;
+
     EF.spriteAsset.add(clone);
 
     this.update();
@@ -79,6 +81,14 @@ export default class ManageSpriteAsset {
     } while (dupe);
 
     return nameMod;
+  }
+
+  static relocateSprite(idArray: string[]) {
+    let temp: { id: string; order: number }[] = [];
+    idArray.forEach((id, order) => {
+      temp.push({ id: id, order: order });
+    });
+    EF.spriteAsset.update(temp);
   }
 
   static getSprite(option: {} = undefined) {

@@ -14,6 +14,7 @@ import formatter from "../../../util/formatter";
 export default class SpriteList implements IRenderable, INotifiable {
   private jqObj: JQuery;
   private searchBar: JQuery;
+  private list: JQuery;
 
   private fileListener: FileDropListener;
 
@@ -40,22 +41,22 @@ export default class SpriteList implements IRenderable, INotifiable {
 
   init = () => {
     let listContainer = $("<div />").addClass(s.listContainer);
-    let list = $("<li />")
+    this.list = $("<li />")
       .addClass("list-group")
       .addClass(s.list);
 
-    list.sortable({
+    this.list.sortable({
       placeholder: s.listHighlight,
       handle: "." + s.dragHandle,
       scroll: true,
       cursor: "grabbing",
       axis: "y",
       start: function(ev, ui) {
-        $(this).data("previndex", ui.item.index());
+        $(this).attr({ id: "item-" + ui.item.index() });
       },
       update: this.relocate
     });
-    listContainer.append(list);
+    listContainer.append(this.list);
 
     this.jqObj.append(this.searchBar);
     this.jqObj.append(listContainer);
@@ -64,13 +65,16 @@ export default class SpriteList implements IRenderable, INotifiable {
   };
 
   //TODO - Reimplement relocate() with vis dataset
-  relocate(ev, ui) {
+  relocate = (ev, ui) => {
     // gets the new and old index then removes the temporary attribute
     // var newIndex = ui.item.index();
     // var oldIndex = $(this).data("previndex");
     // EntityQuery.relocate(EF.getSpriteAsset(), oldIndex, newIndex);
     // $(this).removeAttr("data-previndex");
-  }
+
+    let temp = this.list.sortable("toArray", { attribute: "data-id" });
+    ManageSprAsset.relocateSprite(temp);
+  };
 
   update = () => {
     let list = this.jqObj.find("." + s.list);
@@ -90,9 +94,10 @@ export default class SpriteList implements IRenderable, INotifiable {
     ManageSprAsset.getSprite({
       filter: item => {
         return searchRE.test(item.name.toLowerCase());
-      }
+      },
+      order: "order"
     }).map(item => {
-      let temp = new SpriteListItem(item.name, item.image, s.dragHandle);
+      let temp = new SpriteListItem(item, s.dragHandle);
       let tempItem = temp.getRender();
       list.append(tempItem);
     });

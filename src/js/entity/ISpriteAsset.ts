@@ -3,6 +3,7 @@
  */
 export default interface ISpriteAsset {
   id?: string;
-  name: string;
-  image: string;
+  order?: number;
+  name?: string;
+  image?: string;
 }

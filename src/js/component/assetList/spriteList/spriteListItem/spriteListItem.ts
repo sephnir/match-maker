@@ -1,19 +1,24 @@
 import * as s from "./spriteListItem.css";
 
 import IRenderable from "../../../interface/IRenderable";
+import SpriteAsset from "../../../../entity/ISpriteAsset";
 
 export default class SpriteListItem implements IRenderable {
   private jqObj: JQuery;
   private name: string;
   private image: string;
+  private id: string;
 
   private handleClass: string;
 
-  constructor(name: string, image: string, handleClass: string = "") {
-    this.name = name;
-    this.image = image;
+  constructor(sprite: SpriteAsset, handleClass: string) {
+    this.name = sprite.name;
+    this.image = sprite.image;
+    this.id = sprite.id;
     this.handleClass = handleClass;
-    this.jqObj = $("<ul />").addClass(s.container);
+    this.jqObj = $("<ul />")
+      .addClass(s.container)
+      .attr("data-id", this.id);
     this.update();
   }
 
