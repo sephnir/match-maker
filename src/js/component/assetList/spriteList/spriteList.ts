@@ -6,7 +6,6 @@ import INotifiable from "../../interface/INotifiable";
 
 import SpriteAsset from "../../../entity/ISpriteAsset";
 
-import { EntityType } from "../../../enum/EAssets";
 import SpriteListItem from "./spriteListItem/spriteListItem";
 import FileDropListener from "../../../listener/fileDropListener";
 import formatter from "../../../util/formatter";
@@ -65,12 +64,14 @@ export default class SpriteList implements IRenderable, INotifiable {
   };
 
   relocate = (ev, ui) => {
-    let temp = this.list.sortable("toArray", { attribute: "data-id" });
+    let temp = this.list.sortable("toArray", {
+      attribute: "data-spriteAssetId"
+    });
     ManageSprAsset.relocateSprite(temp);
   };
 
   update = () => {
-    let list = this.jqObj.find("." + s.list);
+    let list = this.list;
     list.empty();
 
     let searchRE = new RegExp(
@@ -98,13 +99,27 @@ export default class SpriteList implements IRenderable, INotifiable {
     list.sortable("refresh");
   };
 
-  notify = (types: EntityType) => {
-    switch (types) {
-      case EntityType.SPRITE_ASSET:
-        this.update();
-        break;
+  addToList = (item: SpriteAsset) => {
+    let temp = new SpriteListItem(item, s.dragHandle);
+    let tempItem = temp.getRender();
+    this.list.append(tempItem);
+  };
+
+  notify = (event: any, properties: any, senderId: any) => {
+    console.log(event);
+
+    if (event === "add") {
+      properties.items.forEach(item => {
+        this.notifyAdd(item);
+      });
     }
   };
+
+  notifyAdd(id: string) {
+    let temp = ManageSprAsset.getSpriteById(id);
+    this.addToList(temp);
+  }
+
   getRender = () => {
     return this.jqObj;
   };

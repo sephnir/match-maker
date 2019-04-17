@@ -4,10 +4,15 @@ import IRenderable from "../../../interface/IRenderable";
 import SpriteAsset from "../../../../entity/ISpriteAsset";
 
 export default class SpriteListItem implements IRenderable {
-  private jqObj: JQuery;
+  private jqObj: JQuery = $("<ul />");
+  private jqImage: JQuery = $("<img />");
+  private jqName: JQuery = $("<div />");
+
   private name: string;
   private image: string;
   private id: string;
+
+  private display: boolean = true;
 
   private handleClass: string;
 
@@ -16,26 +21,20 @@ export default class SpriteListItem implements IRenderable {
     this.image = sprite.image;
     this.id = sprite.id;
     this.handleClass = handleClass;
-    this.jqObj = $("<ul />")
-      .addClass(s.container)
-      .attr("data-id", this.id);
-    this.update();
+
+    this.init();
   }
 
-  update() {
-    this.jqObj.empty();
+  init() {
+    this.jqObj
+      .addClass(s.container)
+      .attr({ "data-spriteAssetId": this.id, id: "spritelist_" + this.id });
+    this.jqImage.addClass(s.thumbnail).attr("src", this.image);
+    this.jqName.text(this.name).addClass(s.label);
 
     let imageCtn = $("<div />").addClass(s.thumbnailContainer);
 
-    let image = $("<img />")
-      .addClass(s.thumbnail)
-      .attr("src", this.image);
-
-    imageCtn.append(image);
-
-    let label = $("<div />")
-      .append(this.name)
-      .addClass(s.label);
+    imageCtn.append(this.jqImage);
 
     let icon = $("<img />").attr({ src: "/img/draggable.svg" });
     //.addClass("dragHandle");
@@ -46,15 +45,28 @@ export default class SpriteListItem implements IRenderable {
 
     this.jqObj
       .append(imageCtn)
-      .append(label)
+      .append(this.jqName)
       .append(handle)
       .addClass("list-group-item")
       .addClass(s.spriteItem);
   }
 
-  setDraggableHandleClass(className: string) {
-    this.handleClass = className;
-    this.update();
+  setName(name: string) {
+    this.name = name;
+    this.jqName.text(name);
+  }
+
+  getName() {
+    return this.name;
+  }
+
+  setImage(image: string) {
+    this.image = image;
+    this.jqImage.attr("src", image);
+  }
+
+  getImage() {
+    return this.image;
   }
 
   getRender = () => {

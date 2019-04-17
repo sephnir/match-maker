@@ -3,28 +3,15 @@ import SpriteAsset from "../entity/ISpriteAsset";
 import EF from "../entity/entityFactory";
 import formatter from "../util/formatter";
 
-import * as PIXI from "pixi.js";
-
-import { EntityType } from "../enum/EAssets";
-
 export default class ManageSpriteAsset {
   private static observer: INotifiable[] = [];
-
-  /**
-   * Notifies all notifiable components that are observing "sprite assets".
-   */
-  private static update(): void {
-    this.observer.forEach(o => {
-      o.notify(EntityType.SPRITE_ASSET);
-    });
-  }
 
   /**
    * Add a new observer.
    * @param obj Notifiable components.
    */
   static addObserver(obj: INotifiable) {
-    this.observer.push(obj);
+    EF.spriteAsset.on("*", obj.notify);
   }
 
   /**
@@ -53,14 +40,15 @@ export default class ManageSpriteAsset {
 
     EF.spriteAsset.add(clone);
 
-    this.update();
+    //this.update();
   }
 
   /**
    * Format name string with duplicate numbering appended.
-   * @param name Name of the entity instance
+   * @param name Name of the entity instance.
+   * @returns New name after modification.
    */
-  static dupeName(name: string) {
+  static dupeName(name: string): string {
     let dupe = false;
     let count = 0;
     let nameMod = name;
@@ -91,8 +79,13 @@ export default class ManageSpriteAsset {
     EF.spriteAsset.update(temp);
   }
 
-  static getSprite(option: {} = undefined) {
+  static getSprite(option?: {}): SpriteAsset[] {
     if (option) return EF.spriteAsset.get(option);
     else return EF.spriteAsset.get();
+  }
+
+  static getSpriteById(id: string, option?: {}) {
+    let result = EF.spriteAsset.get(id, option);
+    return result;
   }
 }
