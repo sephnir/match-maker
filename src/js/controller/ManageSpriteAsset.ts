@@ -5,7 +5,7 @@ import formatter from "../util/formatter";
 
 import * as PIXI from "pixi.js";
 
-import "../enum/EEntity";
+import { EntityType } from "../enum/EAssets";
 
 export default class ManageSpriteAsset {
   private static observer: INotifiable[] = [];
@@ -45,7 +45,7 @@ export default class ManageSpriteAsset {
    * @param name Name of the sprite asset.
    * @param image Base64 representation of buffer.
    */
-  static addSprite(spriteAsset: SpriteAsset) {
+  static async addSprite(spriteAsset: SpriteAsset) {
     let clone = spriteAsset;
     let tempName = this.dupeName(clone.name);
     clone.name = tempName;

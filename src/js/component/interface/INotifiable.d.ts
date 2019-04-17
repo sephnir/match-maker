@@ -1,4 +1,4 @@
-import "../../enum/EEntity";
+import { EntityType } from "../../enum/EAssets";
 
 export default interface INotifiable {
   /**

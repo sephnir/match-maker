@@ -6,7 +6,7 @@ import INotifiable from "../../interface/INotifiable";
 
 import SpriteAsset from "../../../entity/ISpriteAsset";
 
-import "../../../enum/EEntity";
+import { EntityType } from "../../../enum/EAssets";
 import SpriteListItem from "./spriteListItem/spriteListItem";
 import FileDropListener from "../../../listener/fileDropListener";
 import formatter from "../../../util/formatter";
@@ -27,6 +27,7 @@ export default class SpriteList implements IRenderable, INotifiable {
     this.searchBar.on("keyup paste", this.update);
 
     this.fileListener = new FileDropListener(this.jqObj, this.fileHandling);
+    ManageSprAsset.addObserver(this);
     this.init();
   }
 
@@ -36,7 +37,6 @@ export default class SpriteList implements IRenderable, INotifiable {
       image: dataurl.toString()
     };
     ManageSprAsset.uploadSprite(spriteAsset);
-    this.update();
   };
 
   init = () => {
@@ -64,14 +64,7 @@ export default class SpriteList implements IRenderable, INotifiable {
     this.update();
   };
 
-  //TODO - Reimplement relocate() with vis dataset
   relocate = (ev, ui) => {
-    // gets the new and old index then removes the temporary attribute
-    // var newIndex = ui.item.index();
-    // var oldIndex = $(this).data("previndex");
-    // EntityQuery.relocate(EF.getSpriteAsset(), oldIndex, newIndex);
-    // $(this).removeAttr("data-previndex");
-
     let temp = this.list.sortable("toArray", { attribute: "data-id" });
     ManageSprAsset.relocateSprite(temp);
   };
@@ -109,6 +102,7 @@ export default class SpriteList implements IRenderable, INotifiable {
     switch (types) {
       case EntityType.SPRITE_ASSET:
         this.update();
+        break;
     }
   };
   getRender = () => {
