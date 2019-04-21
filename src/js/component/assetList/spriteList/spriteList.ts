@@ -106,8 +106,6 @@ export default class SpriteList implements IRenderable, INotifiable {
   };
 
   notify = (event: any, properties: any, senderId: any) => {
-    console.log(event);
-
     if (event === "add") {
       properties.items.forEach(item => {
         this.notifyAdd(item);

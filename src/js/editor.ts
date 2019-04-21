@@ -4,6 +4,7 @@
 import GameScreen from "./component/gameScreen/gameScreen";
 import AssetPanel from "./component/assetPanel/assetPanel";
 import TabCloseListener from "./listener/tabCloseListener";
+import ModalMngr from "./controller/ModalManager";
 import * as s from "./editor.css";
 
 let gameScreen = new GameScreen(800, 600);
@@ -19,6 +20,8 @@ $(document).bind("drop dragover contextmenu", function(e) {
 var body = $("body").addClass(
   "d-flex justify-content-center jumbotron vertical-center"
 );
+
+body.append(ModalMngr.contextGetRender());
 
 var container = $("<div />").addClass(s.flexbox);
 

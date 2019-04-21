@@ -1,5 +1,7 @@
 import * as s from "./spriteListItem.css";
 
+import MouseClickListener from "../../../../listener/mouseClickListener";
+import ModalMngr from "../../../../controller/ModalManager";
 import IRenderable from "../../../interface/IRenderable";
 import SpriteAsset from "../../../../entity/ISpriteAsset";
 
@@ -13,6 +15,7 @@ export default class SpriteListItem implements IRenderable {
   private id: string;
 
   private display: boolean = true;
+  private mcl = new MouseClickListener(this.jqObj);
 
   private handleClass: string;
 
@@ -22,13 +25,18 @@ export default class SpriteListItem implements IRenderable {
     this.id = sprite.id;
     this.handleClass = handleClass;
 
+    this.mcl.setRightEvent(ev => {
+      let cursor = ev.originalEvent;
+      this.setupContext(cursor.clientX, cursor.clientY);
+    });
+    this.mcl.setDoubleEvent(() => {
+      alert("Double");
+    });
+
     this.init();
   }
 
   init() {
-    this.jqObj
-      .addClass(s.container)
-      .attr({ "data-spriteAssetId": this.id, id: "spritelist_" + this.id });
     this.jqImage.addClass(s.thumbnail).attr("src", this.image);
     this.jqName.text(this.name).addClass(s.label);
 
@@ -36,19 +44,38 @@ export default class SpriteListItem implements IRenderable {
 
     imageCtn.append(this.jqImage);
 
+    let asset = $("<div />")
+      .append(imageCtn)
+      .append(this.jqName)
+      .addClass(s.draghandle);
+
     let icon = $("<img />").attr({ src: "/img/draggable.svg" });
-    //.addClass("dragHandle");
 
     let handle = $("<div />")
       .addClass(this.handleClass)
       .append(icon);
 
+    new MouseClickListener(handle);
+
     this.jqObj
-      .append(imageCtn)
-      .append(this.jqName)
+      .append(asset)
       .append(handle)
       .addClass("list-group-item")
-      .addClass(s.spriteItem);
+      .addClass(s.spriteItem)
+      .addClass(s.container)
+      .attr({ "data-spriteAssetId": this.id, id: "spritelist_" + this.id })
+      .draggable({
+        handle: "." + s.draghandle,
+        helper: "clone"
+      });
+  }
+
+  setupContext(x: number, y: number) {
+    ModalMngr.contextReset();
+    ModalMngr.contextSetPos(x, y);
+    ModalMngr.contextAddMenu("Add", () => {});
+    ModalMngr.contextAddMenu("Delete", () => {});
+    ModalMngr.contextShow();
   }
 
   setName(name: string) {
