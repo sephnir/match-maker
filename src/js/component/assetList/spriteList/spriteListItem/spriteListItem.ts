@@ -1,7 +1,7 @@
 import * as s from "./spriteListItem.css";
 
 import MouseClickListener from "../../../../listener/mouseClickListener";
-import ModalMngr from "../../../../controller/ModalManager";
+import ContextMngr from "../../../../controller/ContextMenuManager";
 import IRenderable from "../../../interface/IRenderable";
 import SpriteAsset from "../../../../entity/ISpriteAsset";
 
@@ -71,11 +71,11 @@ export default class SpriteListItem implements IRenderable {
   }
 
   setupContext(x: number, y: number) {
-    ModalMngr.contextReset();
-    ModalMngr.contextSetPos(x, y);
-    ModalMngr.contextAddMenu("Add", () => {});
-    ModalMngr.contextAddMenu("Delete", () => {});
-    ModalMngr.contextShow();
+    ContextMngr.contextReset();
+    ContextMngr.contextSetPos(x, y);
+    ContextMngr.contextAddMenu("Rename", () => {});
+    ContextMngr.contextAddMenu("Delete", () => {});
+    ContextMngr.contextShow();
   }
 
   setName(name: string) {

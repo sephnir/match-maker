@@ -88,11 +88,8 @@ gulp.task("watchify", function() {
 });
 
 function copy_files() {
-  gulp.src(["src/html/*.html"]).pipe(gulp.dest("dist"));
-  gulp
-    .src(["node_modules/bootswatch/dist/cyborg/bootstrap.min.css"])
-    .pipe(gulp.dest("dist/css"));
-
+  gulp.src(["src/html/**/*"]).pipe(gulp.dest("dist"));
+  gulp.src(["src/css/**/*"]).pipe(gulp.dest("dist/css"));
   gulp.src(["src/img/**/*"]).pipe(gulp.dest("dist/img"));
   gulp.src(["src/lib/**/*"]).pipe(gulp.dest("dist/js"));
 }

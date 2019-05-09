@@ -4,29 +4,34 @@
 import GameScreen from "./component/gameScreen/gameScreen";
 import AssetPanel from "./component/assetPanel/assetPanel";
 import TabCloseListener from "./listener/tabCloseListener";
-import ModalMngr from "./controller/ModalManager";
+import ContextMngr from "./controller/ContextMenuManager";
+import ModalMngr from "./controller/ModalBoxManager";
 import * as s from "./editor.css";
 
+/**
+ * Initialize pixi screen
+ */
 let gameScreen = new GameScreen(800, 600);
 let assetPanel = new AssetPanel();
 
-$("#loader").empty();
-
+/**
+ * Disable default events
+ */
 TabCloseListener();
 $(document).bind("drop dragover contextmenu", function(e) {
   e.preventDefault();
 });
 
+/**
+ * Initialize document body
+ */
 var body = $("body").addClass(
   "d-flex justify-content-center jumbotron vertical-center"
 );
-
-body.append(ModalMngr.contextGetRender());
-
+body.append(ContextMngr.contextGetRender());
+body.append(ModalMngr.modalGetRender());
 var container = $("<div />").addClass(s.flexbox);
-
 var row = $("<div />").addClass("row");
-
 var col: JQuery[] = [];
 col.push(
   $("<div />")
@@ -47,3 +52,8 @@ row.append(col);
 
 container.append(row);
 body.append(container);
+
+/**
+ * Removes loading screen
+ */
+$("#loader").empty();

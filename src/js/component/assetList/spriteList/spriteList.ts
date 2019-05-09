@@ -5,21 +5,21 @@ import IRenderable from "../../interface/IRenderable";
 import INotifiable from "../../interface/INotifiable";
 
 import SpriteAsset from "../../../entity/ISpriteAsset";
-
 import SpriteListItem from "./spriteListItem/spriteListItem";
 import FileDropListener from "../../../listener/fileDropListener";
 import formatter from "../../../util/formatter";
 
 export default class SpriteList implements IRenderable, INotifiable {
-  private jqObj: JQuery;
-  private searchBar: JQuery;
-  private list: JQuery;
+  private jqObj: JQuery = $("<div />");
+  private searchBar: JQuery = $("<input />");
+  private list: JQuery = $("<li />");
+  private listCtn: JQuery = $("<div />");
 
   private fileListener: FileDropListener;
 
   constructor() {
-    this.jqObj = $("<div />").addClass(s.container);
-    this.searchBar = $("<input />").attr({
+    this.jqObj.addClass(s.container);
+    this.searchBar.attr({
       type: "text",
       placeholder: "Search"
     });
@@ -39,10 +39,9 @@ export default class SpriteList implements IRenderable, INotifiable {
   };
 
   init = () => {
-    let listContainer = $("<div />").addClass(s.listContainer);
-    this.list = $("<li />")
-      .addClass("list-group")
-      .addClass(s.list);
+    this.listCtn.addClass(s.listContainer);
+
+    this.list.addClass("list-group").addClass(s.list);
 
     this.list.sortable({
       placeholder: s.listHighlight,
@@ -55,10 +54,10 @@ export default class SpriteList implements IRenderable, INotifiable {
       },
       update: this.relocate
     });
-    listContainer.append(this.list);
+    this.listCtn.append(this.list);
 
     this.jqObj.append(this.searchBar);
-    this.jqObj.append(listContainer);
+    this.jqObj.append(this.listCtn);
 
     this.update();
   };

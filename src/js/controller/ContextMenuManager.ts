@@ -1,6 +1,6 @@
 import ContextMenu from "../component/contextMenu/contextMenu";
 
-export default class ModalManager {
+export default class ContextMenuMngr {
   static contextMenu = new ContextMenu();
 
   static contextReset() {
