@@ -9,8 +9,8 @@ export default class ModalBox implements IRenderable {
   private dialog: JQuery = $("<div />").addClass("modal-dialog");
   private content: JQuery = $("<div />").addClass("modal-content");
   private header: JQuery = $("<div />").addClass("modal-header");
-  private body: JQuery = $("<div />").addClass("modal-content");
-  private footer: JQuery = $("<div />").addClass("modal-content");
+  private body: JQuery = $("<div />").addClass("modal-body");
+  private footer: JQuery = $("<div />").addClass("modal-footer");
 
   private data: any;
   private options: {};
