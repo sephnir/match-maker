@@ -15,6 +15,7 @@ export default class SpriteList implements IRenderable, INotifiable {
   private list: JQuery = $("<li />");
   private listCtn: JQuery = $("<div />");
 
+  private itemList: SpriteListItem[] = [];
   private fileListener: FileDropListener;
 
   constructor() {
@@ -23,7 +24,7 @@ export default class SpriteList implements IRenderable, INotifiable {
       type: "text",
       placeholder: "Search"
     });
-    this.searchBar.on("keyup paste", this.update);
+    this.searchBar.on("keyup paste", this.filter);
 
     this.fileListener = new FileDropListener(this.jqObj, this.fileHandling);
     ManageSprAsset.addObserver(this);
@@ -59,7 +60,7 @@ export default class SpriteList implements IRenderable, INotifiable {
     this.jqObj.append(this.searchBar);
     this.jqObj.append(this.listCtn);
 
-    this.update();
+    this.filter();
   };
 
   relocate = (ev, ui) => {
@@ -69,9 +70,9 @@ export default class SpriteList implements IRenderable, INotifiable {
     ManageSprAsset.relocateSprite(temp);
   };
 
-  update = () => {
-    let list = this.list;
-    list.empty();
+  filter = () => {
+    //let list = this.list;
+    //list.empty();
 
     let searchRE = new RegExp(
       ".*" +
@@ -84,22 +85,28 @@ export default class SpriteList implements IRenderable, INotifiable {
         ".*"
     );
     // Construct the list
-    ManageSprAsset.getSprite({
-      filter: item => {
-        return searchRE.test(item.name.toLowerCase());
-      },
-      order: "order"
-    }).map(item => {
-      let temp = new SpriteListItem(item, s.dragHandle);
-      let tempItem = temp.getRender();
-      list.append(tempItem);
+    // ManageSprAsset.getSprite({
+    //   filter: item => {
+    //     return searchRE.test(item.name.toLowerCase());
+    //   },
+    //   order: "order"
+    // }).map(item => {
+    //   let temp = new SpriteListItem(item, s.dragHandle);
+    //   let tempItem = temp.getRender();
+    //   list.append(tempItem);
+    // });
+
+    this.itemList.forEach(item => {
+      if (searchRE.test(item.getName().toLowerCase())) item.getRender().show();
+      else item.getRender().hide();
     });
 
-    list.sortable("refresh");
+    //list.sortable("refresh");
   };
 
   addToList = (item: SpriteAsset) => {
     let temp = new SpriteListItem(item, s.dragHandle);
+    this.itemList.push(temp);
     let tempItem = temp.getRender();
     this.list.append(tempItem);
   };
@@ -109,12 +116,25 @@ export default class SpriteList implements IRenderable, INotifiable {
       properties.items.forEach(item => {
         this.notifyAdd(item);
       });
+    } else if (event === "update") {
+      properties.items.forEach(item => {
+        this.notifyUpdate(item);
+      });
     }
   };
 
   notifyAdd(id: string) {
     let temp = ManageSprAsset.getSpriteById(id);
     this.addToList(temp);
+  }
+
+  notifyUpdate(id: string) {
+    for (let i = 0; i < this.itemList.length; i++) {
+      if (this.itemList[i].getId() === id) {
+        this.itemList[i].updateEvent(id);
+        return;
+      }
+    }
   }
 
   getRender = () => {

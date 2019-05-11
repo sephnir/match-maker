@@ -7,6 +7,11 @@ export default class ModalBoxMngr {
     return this.modal.getRender();
   }
 
+  static initModal(modal: Modal = new Modal()) {
+    this.modal = modal;
+    this.modalShow();
+  }
+
   static modalSetContent(headerJQ: JQuery, bodyJQ: JQuery, footerJQ: JQuery) {
     this.modal.clear();
     this.modal.setHeader(headerJQ);

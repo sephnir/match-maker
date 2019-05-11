@@ -2,6 +2,7 @@ import INotifiable from "../component/interface/INotifiable";
 import SpriteAsset from "../entity/ISpriteAsset";
 import EF from "../entity/entityFactory";
 import formatter from "../util/formatter";
+import Validator from "../util/validator";
 
 export default class ManageSpriteAsset {
   private static observer: INotifiable[] = [];
@@ -54,13 +55,7 @@ export default class ManageSpriteAsset {
     let nameMod = name;
 
     do {
-      dupe = false;
-      dupe =
-        EF.spriteAsset.get({
-          filter: item => {
-            return item.name == nameMod;
-          }
-        }).length > 0;
+      dupe = this.checkNameDupe(nameMod);
 
       if (dupe) {
         count++;
@@ -69,6 +64,32 @@ export default class ManageSpriteAsset {
     } while (dupe);
 
     return nameMod;
+  }
+
+  /**
+   * Check if the asset name already exists.
+   * @param name Name to check.
+   */
+  static checkNameDupe(name: string): boolean {
+    let dupe = false;
+    dupe =
+      EF.spriteAsset.get({
+        filter: item => {
+          return item.name == name;
+        }
+      }).length > 0;
+
+    return dupe;
+  }
+
+  /**
+   * Rename the id referenced asset's name.
+   * @param id Unique id of the asset to rename.
+   * @param name New name of the asset.
+   */
+  static renameSprite(id: string, name: string) {
+    if (ManageSpriteAsset.checkNameDupe(name)) throw "Name already existed.";
+    EF.spriteAsset.update({ id: id, name: name });
   }
 
   static relocateSprite(idArray: string[]) {

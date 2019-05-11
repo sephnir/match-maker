@@ -5,6 +5,10 @@ import ContextMngr from "../../../../controller/ContextMenuManager";
 import IRenderable from "../../../interface/IRenderable";
 import SpriteAsset from "../../../../entity/ISpriteAsset";
 
+import SprMngr from "../../../../controller/ManageSpriteAsset";
+import ModalMngr from "../../../../controller/ModalBoxManager";
+import Modal from "../../../modalBox/stereotypes/renameAsset/renameAsset";
+
 export default class SpriteListItem implements IRenderable {
   private jqObj: JQuery = $("<ul />");
   private jqImage: JQuery = $("<img />");
@@ -36,6 +40,9 @@ export default class SpriteListItem implements IRenderable {
     this.init();
   }
 
+  /**
+   * Initialize sprite list items
+   */
   init() {
     this.jqImage.addClass(s.thumbnail).attr("src", this.image);
     this.jqName.text(this.name).addClass(s.label);
@@ -70,12 +77,34 @@ export default class SpriteListItem implements IRenderable {
       });
   }
 
+  /**
+   * Initialize context menu for right click.
+   *
+   * @param x X position of the context menu
+   * @param y Y position of the context menu
+   */
   setupContext(x: number, y: number) {
     ContextMngr.contextReset();
     ContextMngr.contextSetPos(x, y);
-    ContextMngr.contextAddMenu("Rename", () => {});
+    ContextMngr.contextAddMenu("Rename", this.renameEvent);
     ContextMngr.contextAddMenu("Delete", () => {});
     ContextMngr.contextShow();
+  }
+
+  renameEvent = () => {
+    let modal = new Modal(this.id, this.name, SprMngr.renameSprite);
+    ModalMngr.initModal(modal);
+  };
+
+  updateEvent = (id: string) => {
+    let temp = SprMngr.getSpriteById(id);
+
+    this.setName(temp.name);
+    this.setImage(temp.image);
+  };
+
+  getId() {
+    return this.id;
   }
 
   setName(name: string) {
