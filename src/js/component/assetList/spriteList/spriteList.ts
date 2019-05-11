@@ -71,9 +71,6 @@ export default class SpriteList implements IRenderable, INotifiable {
   };
 
   filter = () => {
-    //let list = this.list;
-    //list.empty();
-
     let searchRE = new RegExp(
       ".*" +
         formatter.escapeRegExp(
@@ -84,17 +81,6 @@ export default class SpriteList implements IRenderable, INotifiable {
         ) +
         ".*"
     );
-    // Construct the list
-    // ManageSprAsset.getSprite({
-    //   filter: item => {
-    //     return searchRE.test(item.name.toLowerCase());
-    //   },
-    //   order: "order"
-    // }).map(item => {
-    //   let temp = new SpriteListItem(item, s.dragHandle);
-    //   let tempItem = temp.getRender();
-    //   list.append(tempItem);
-    // });
 
     this.itemList.forEach(item => {
       if (searchRE.test(item.getName().toLowerCase())) item.getRender().show();
@@ -120,6 +106,10 @@ export default class SpriteList implements IRenderable, INotifiable {
       properties.items.forEach(item => {
         this.notifyUpdate(item);
       });
+    } else if (event === "remove") {
+      properties.items.forEach(item => {
+        this.notifyRemove(item);
+      });
     }
   };
 
@@ -132,6 +122,16 @@ export default class SpriteList implements IRenderable, INotifiable {
     for (let i = 0; i < this.itemList.length; i++) {
       if (this.itemList[i].getId() === id) {
         this.itemList[i].updateEvent(id);
+        return;
+      }
+    }
+  }
+
+  notifyRemove(id: string) {
+    for (let i = 0; i < this.itemList.length; i++) {
+      if (this.itemList[i].getId() === id) {
+        this.itemList[i].getRender().remove();
+        this.itemList.splice(i, 1);
         return;
       }
     }

@@ -92,6 +92,10 @@ export default class ManageSpriteAsset {
     EF.spriteAsset.update({ id: id, name: name });
   }
 
+  static deleteSprite(id: string) {
+    EF.spriteAsset.remove(id);
+  }
+
   static relocateSprite(idArray: string[]) {
     let temp: { id: string; order: number }[] = [];
     idArray.forEach((id, order) => {

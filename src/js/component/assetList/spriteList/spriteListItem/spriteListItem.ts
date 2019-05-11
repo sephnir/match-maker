@@ -7,7 +7,8 @@ import SpriteAsset from "../../../../entity/ISpriteAsset";
 
 import SprMngr from "../../../../controller/ManageSpriteAsset";
 import ModalMngr from "../../../../controller/ModalBoxManager";
-import Modal from "../../../modalBox/stereotypes/renameAsset/renameAsset";
+import RenameModal from "../../../modalBox/stereotypes/renameAsset/renameAsset";
+import CfmModal from "../../../modalBox/stereotypes/confirmation/confirmation";
 
 export default class SpriteListItem implements IRenderable {
   private jqObj: JQuery = $("<ul />");
@@ -87,12 +88,23 @@ export default class SpriteListItem implements IRenderable {
     ContextMngr.contextReset();
     ContextMngr.contextSetPos(x, y);
     ContextMngr.contextAddMenu("Rename", this.renameEvent);
-    ContextMngr.contextAddMenu("Delete", () => {});
+    ContextMngr.contextAddMenu("Delete", this.deleteEvent);
     ContextMngr.contextShow();
   }
 
   renameEvent = () => {
-    let modal = new Modal(this.id, this.name, SprMngr.renameSprite);
+    let modal = new RenameModal(this.id, this.name, SprMngr.renameSprite);
+    ModalMngr.initModal(modal);
+  };
+
+  deleteEvent = () => {
+    let modal = new CfmModal(
+      "You are about to delete '" +
+        this.name +
+        "', are you sure you want to continue?",
+      SprMngr.deleteSprite,
+      this.id
+    );
     ModalMngr.initModal(modal);
   };
 
